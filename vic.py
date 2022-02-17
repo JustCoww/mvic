@@ -3,14 +3,17 @@ from wand.image import Image
 from wand.drawing import Drawing
 from PIL import Image as PImage, ImageDraw as PImageDraw, ImageFont as PImageFont
 from os.path import expanduser
-from os import system as cmd
-from sys import argv as arg
+
+# Variables
 cover = input('Insert the cover image location: ')
 song_name = input("What's the song name? ")
 artist_name = input("What's the name of the artist? ")
 cover = Image(filename = cover)
 cover.convert('png')
 cache = expanduser('~') + '/.cache/vic/'
+text_colors = (255, 255, 255)
+font_folder = cache + 'fonts/'
+W, H = (7680, 317)
 
 # Background
 bg = cover.clone()
@@ -28,14 +31,6 @@ thumb.composite(cv, gravity = 'center')
 thumb.resize(1920, 1080)
 thumb.save(filename = 'thumb.png')
 
-
-
-##### Text
-
-text_colors = (255, 255, 255)
-font_folder = cache + 'fonts/'
-W, H = (7680, 317)
-
 # Main Text
 text_base = PImage.new(mode = 'RGBA', size = (W, H), color = (255, 0, 0, 0))
 text = PImageDraw.Draw(text_base)
@@ -52,10 +47,6 @@ w, h = text.textsize(artist_name, font=font)
 text.text( ((W-w)/2, (H-h)/2) , artist_name, fill = text_colors, font=font, align='center')
 text_base.save(cache + 'artist.png')
 
-#####
-
-
-
 # Video image
 slowedreverb = Image(filename = cache + 'slowedreverb.png')
 video = bg.clone()
@@ -66,6 +57,3 @@ video.composite(text_artist, left = 1, top = 3610)
 video.composite(text_main, left = 1, top = 3240)
 video.composite(cv, left = 2591, top = 659)
 video.save(filename = 'video.png')
-
-cmd('rm ~/.cache/vic/artist.png')
-cmd('rm ~/.cache/vic/song.png')
