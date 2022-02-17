@@ -7,7 +7,7 @@ from os.path import expanduser
 # Variables
 cover = input('Insert the cover image location: ')
 song_name = input("What's the song name? ")
-artist_name = input("What's the name of the artist? ")
+artist_name = input("What's the artist's name? ")
 cover = Image(filename=cover)
 cover.convert('png')
 folder = expanduser('~') + '/.local/bin/vic/'
