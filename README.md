@@ -12,5 +12,5 @@
   ```
 **Uninstall**
   ```
-  rm -rf ~/.local/bin/vic && sudo rm /usr/bin/vic
+  rm -rf ~/.local/share/vic && sudo rm /usr/bin/vic
   ```
