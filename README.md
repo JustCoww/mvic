@@ -8,7 +8,7 @@
   ```
 **Install**
   ```
-  git clone https://github.com/JustCoww/videoimagecreator ~/.local/bin/vic && chmod +x ~/.local/bin/videoimagecreator/vic.py && sudo ln -s ~/local/bin/vic/vic.py /usr/bin/vic
+  git clone https://github.com/JustCoww/videoimagecreator ~/.local/bin/vic && chmod +x ~/.local/bin/vic/vic.py && sudo ln -s ~/local/bin/vic/vic.py /usr/bin/vic
   ```
 **Uninstall**
   ```
