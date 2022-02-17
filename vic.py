@@ -8,11 +8,11 @@ from os.path import expanduser
 cover = input('Insert the cover image location: ')
 song_name = input("What's the song name? ")
 artist_name = input("What's the name of the artist? ")
-cover = Image(filename = cover)
+cover = Image(filename=cover)
 cover.convert('png')
-cache = expanduser('~') + '/.cache/vic/'
+folder = expanduser('~') + '/.local/bin/vic/'
 text_colors = (255, 255, 255)
-font_folder = cache + 'fonts/'
+font_folder = folder + 'fonts/'
 W, H = (7680, 317)
 
 # Background
@@ -27,33 +27,33 @@ cv.resize(2500, 2500)
 
 # Thumbnail
 thumb = bg.clone()
-thumb.composite(cv, gravity = 'center')
+thumb.composite(cv, gravity='center')
 thumb.resize(1920, 1080)
-thumb.save(filename = 'thumb.png')
+thumb.save(filename='thumb.png')
 
 # Main Text
-text_base = PImage.new(mode = 'RGBA', size = (W, H), color = (255, 0, 0, 0))
+text_base = PImage.new(mode='RGBA', size=(W, H), color=(255, 0, 0, 0))
 text = PImageDraw.Draw(text_base)
 font = PImageFont.truetype(str(font_folder + 'Roboto-Bold.ttf'), 279)
 w, h = text.textsize(song_name, font=font)
-text.text( ((W-w)/2, (H-h)/2) , song_name, fill = text_colors, font=font, align='center')
-text_base.save(cache + 'song.png')
+text.text( ( (W-w)/2, (H-h)/2 ), song_name, fill=text_colors, font=font, align='center')
+text_base.save(folder + 'song.png')
 
 # Artist Text
-text_base = PImage.new(mode = 'RGBA', size = (W, H), color = (255, 0, 0, 0))
+text_base = PImage.new(mode='RGBA', size=(W, H), color=(255, 0, 0, 0))
 text = PImageDraw.Draw(text_base)
 font = PImageFont.truetype(str(font_folder + 'Roboto-Light.ttf'), 186)
 w, h = text.textsize(artist_name, font=font)
-text.text( ((W-w)/2, (H-h)/2) , artist_name, fill = text_colors, font=font, align='center')
-text_base.save(cache + 'artist.png')
+text.text( ( (W-w)/2, (H-h)/2 ), artist_name, fill=text_colors, font=font, align='center')
+text_base.save(folder + 'artist.png')
 
 # Video image
-slowedreverb = Image(filename = cache + 'slowedreverb.png')
+sr = Image(filename = folder + 'slowedreverb.png')
 video = bg.clone()
-song = Image(filename = cache + 'song.png')
-artist = Image(filename = cache + 'artist.png')
-video.composite(slowedreverb, gravity = 'center')
-video.composite(cv, left = 2591, top = 659)
-video.composite(song, left = 1, top = 3240)
-video.composite(artist, left = 1, top = 3610)
-video.save(filename = 'video.png')
+song = Image(filename = folder + 'song.png')
+artist = Image(filename = folder + 'artist.png')
+video.composite(sr, gravity='center')
+video.composite(cv, left= 2591, top=659)
+video.composite(song, left= 1, top=3240)
+video.composite(artist, left= 1, top=3610)
+video.save(filename='video.png')
