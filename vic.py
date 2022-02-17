@@ -31,7 +31,7 @@ thumb.composite(cv, gravity='center')
 thumb.resize(1920, 1080)
 thumb.save(filename='thumb.png')
 
-# Main Text
+# Song Text
 text_base = PImage.new(mode='RGBA', size=(W, H), color=(255, 0, 0, 0))
 text = PImageDraw.Draw(text_base)
 font = PImageFont.truetype(str(font_folder + 'Roboto-Bold.ttf'), 279)
