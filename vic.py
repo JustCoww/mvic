@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from wand.image import Image
 from wand.drawing import Drawing
 from PIL import Image as PImage, ImageDraw as PImageDraw, ImageFont as PImageFont
@@ -7,12 +8,6 @@ from sys import argv as arg
 cover = input('Insert the cover image location: ')
 song_name = input("What's the song name? ")
 artist_name = input("What's the name of the artist? ")
-
-while cover == '-d':
-    cmd('mkdir ~/.cache/vic')
-    cmd('curl https://raw.githubusercontent.com/JustCoww/videoimagecreator/main/slowedreverb.png -o ~/.cache/vic/slowedreverb.png')
-    cover = input('Insert the cover image location: ')
-
 cover = Image(filename = cover)
 cover.convert('png')
 cache = expanduser('~') + '/.cache/vic/'
