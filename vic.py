@@ -10,7 +10,7 @@ song_name = input("What's the song name? ")
 artist_name = input("What's the artist's name? ")
 cover = Image(filename=cover)
 cover.convert('png')
-folder = expanduser('~') + '/.local/bin/vic/'
+folder = expanduser('~') + '/.local/share/vic/'
 text_colors = (255, 255, 255)
 font_folder = folder + 'fonts/'
 W, H = (7680, 317)
