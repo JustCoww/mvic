@@ -5,7 +5,7 @@ Made for https://www.youtube.com/channel/UCvrcrqw10cPn9SqtgkQxPPQ
 **Pacman**
 
 ```
-sudo pacman -S python-pillow ttf-roboto
+sudo pacman -S ttf-roboto
 ```  
   
   
