@@ -18,7 +18,7 @@ def thumbnail(cover):
     
     # Blur and brightness
     tb = ImageEnhance.Brightness(tb).enhance(0.3)
-    tb = tb.filter(ImageFilter.GaussianBlur(6))
+    tb = tb.filter(ImageFilter.GaussianBlur(60))
     tb = tb.copy()
 
     # Mix into file
@@ -39,32 +39,42 @@ def video(cover, song, artist):
     # Import cover
     bg = Image.open(cover)
     cv = Image.open(cover)
-    # Cover
-    cv = cv.resize((x, y), resample=0, box=None)
-    # Thumb Resize
-    bg = bg.resize((X, Y), resample=0, box=None)
-    # Blur and brightness
-    bg = ImageEnhance.Brightness(bg).enhance(0.3)
-    bg = bg.filter(ImageFilter.GaussianBlur(6))
-    bg = bg.copy()
+
+    # Resizing
+    print('Resizing cover and background...')
+    cv = cv.resize((x, y))
+    bg = bg.resize((X, Y))
+    # Add a shadow (Black square with blur)
+    print('Creating the shadow...')
+    square = Image.new(mode = "RGBA", size = (2500, 2500), color = (0, 0, 0))
+    bg.paste(square, (trunc((X-x)/2), 659))
+    # Blur and turn brightness down
+    print('Adding blur to background...')
+    bg = ImageEnhance.Brightness(bg).enhance(0.4)
+    bg = bg.filter(ImageFilter.GaussianBlur(120))
     # Paste cover into the background
-    center = (trunc((X-x)/2), trunc((Y-y)/2))
+    print('Merging cover with background')
     bg.paste(cv, ( trunc((X-x)/2 ), 659))
 
-    ### Text
-    text = ImageDraw.Draw(bg)
-    # Fonts
-    font_folder = 'fonts/'
-    roboto_bold = ImageFont.truetype(font_folder + 'Roboto-Bold.ttf', 279)
-    roboto_light = ImageFont.truetype(font_folder + 'Roboto-Light.ttf', 186)
-    # Get the size of the final texts
-    s_x, x_y = text.textsize(song, font=roboto_bold)
-    a_x, a_y = text.textsize(artist, font=roboto_light)
-    # Write text in the middle
-    text.text(((X-s_x)/2, 3240), song, fill=(255, 255, 255), font=roboto_bold, align='center')
-    text.text(((X-a_x)/2, 3640), artist, fill=(255, 255, 255), font=roboto_light, align='center')
 
-    # Export final file
-    bg.save('video.png', quality=95)
+    ### Text
+    toptxt = '(Slowed + Reverb)'
+    text = ImageDraw.Draw(bg)
+
+    # [text, y-coordinates, font, font-size]
+    toptxt = [toptxt, 300, 'Roboto-Black', 250]
+    song = [song, 3240, 'Roboto-Bold', 279]
+    artist = [artist, 3640, 'Roboto-Light', 186]
+
+    # Generate the text
+    for i in [toptxt, song, artist]:
+        print('Writing:', i[0])
+        font = ImageFont.truetype(i[2], i[3])
+        x, y = text.textsize(i[0], font=font)
+        text.text(((X-x)/2, i[1]), i[0], fill=(255, 255, 255), font=font, align='center')
+
+    # Export final thing to a file
+    print('Exporting...')
+    bg.save('video.png')
 
     return print('Video image: Done')
