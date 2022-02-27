@@ -28,7 +28,7 @@ def thumbnail(cover, output):
     
     return print('Thumbnail image: Done')
     
-def video(cover, song, artist, output):
+def video(cover, song, artist, toptext, output):
 
     from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
     from math import trunc
@@ -58,21 +58,25 @@ def video(cover, song, artist, output):
 
 
     ### Text
-    toptxt = '(Slowed + Reverb)'
     text = ImageDraw.Draw(bg)
 
     # [text, y-coordinates, font, font-size]
-    toptxt = [toptxt, 300, 'Roboto-Black', 250]
+    toptext = [toptext, 300, 'Roboto-Black', 250]
     song = [song, 3240, 'Roboto-Bold', 279]
     artist = [artist, 3640, 'Roboto-Light', 186]
 
     # Generate the text
-    for i in [toptxt, song, artist]:
+    for i in [toptext, song, artist]:
         print('Writing:', i[0])
         font = ImageFont.truetype(i[2], i[3])
         x, y = text.textsize(i[0], font=font)
         text.text(((X-x)/2, i[1]), i[0], fill=(255, 255, 255), font=font, align='center')
 
+    # Export final thing to a file
+    print('Exporting...')
+    bg.save(output)
+
+    return print('Video image: Done')
     # Export final thing to a file
     print('Exporting...')
     bg.save(output)
