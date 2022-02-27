@@ -1,59 +1,70 @@
 #!/usr/bin/python3
-from wand.image import Image
-from wand.drawing import Drawing
-from PIL import Image as PImage, ImageDraw as PImageDraw, ImageFont as PImageFont
-from os.path import expanduser
+def thumbnail(cover):
 
-# Variables
-cover = input('Insert the cover image location: ')
-song_name = input("What's the song name? ")
-artist_name = input("What's the artist's name? ")
-cover = Image(filename=cover)
-cover.convert('png')
-folder = expanduser('~') + '/.local/share/vic/'
-text_colors = (255, 255, 255)
-font_folder = folder + 'fonts/'
-W, H = (7680, 317)
+    from PIL import Image, ImageEnhance, ImageFilter
+    from math import trunc
 
-# Background
-bg = cover.clone()
-bg.level(0.1, 20, gamma = 5)
-bg.blur(sigma = 6)
-bg.resize(7680, 4320)
+    # Import
+    tb = Image.open(cover)
+    cv = Image.open(cover)
 
-# Cover
-cv = cover.clone()
-cv.resize(2500, 2500)
+    # Cover
+    x, y = (626, 626)
+    cv = cv.resize((x, y), resample=0, box=None)
+    
+    # Thumb Resize
+    X, Y = (1920, 1080)
+    tb = tb.resize((X, Y), resample=0, box=None)
+    
+    # Blur and brightness
+    tb = ImageEnhance.Brightness(tb).enhance(0.3)
+    tb = tb.filter(ImageFilter.GaussianBlur(6))
+    tb = tb.copy()
 
-# Thumbnail
-thumb = bg.clone()
-thumb.composite(cv, gravity='center')
-thumb.resize(1920, 1080)
-thumb.save(filename='thumb.png')
+    # Mix into file
+    center = (trunc((X-x)/2), trunc((Y-y)/2))
+    tb.paste(cv, center)
+    tb.save('thumb.png', quality=95)
+    
+    return print('Thumbnail image: Done')
+    
+def video(cover, song, artist):
 
-# Song Text
-text_base = PImage.new(mode='RGBA', size=(W, H), color=(255, 0, 0, 0))
-text = PImageDraw.Draw(text_base)
-font = PImageFont.truetype(str(font_folder + 'Roboto-Bold.ttf'), 279)
-w, h = text.textsize(song_name, font=font)
-text.text( ( (W-w)/2, (H-h)/2 ), song_name, fill=text_colors, font=font, align='center')
-text_base.save(folder + 'song.png')
+    from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
+    from math import trunc
 
-# Artist Text
-text_base = PImage.new(mode='RGBA', size=(W, H), color=(255, 0, 0, 0))
-text = PImageDraw.Draw(text_base)
-font = PImageFont.truetype(str(font_folder + 'Roboto-Light.ttf'), 186)
-w, h = text.textsize(artist_name, font=font)
-text.text( ( (W-w)/2, (H-h)/2 ), artist_name, fill=text_colors, font=font, align='center')
-text_base.save(folder + 'artist.png')
+    x, y = (2500, 2500) # Cover size
+    X, Y = (7680, 4320) # Background size
 
-# Video image
-sr = Image(filename = folder + 'slowedreverb.png')
-video = bg.clone()
-song = Image(filename = folder + 'song.png')
-artist = Image(filename = folder + 'artist.png')
-video.composite(sr, gravity='center')
-video.composite(cv, left= 2591, top=659)
-video.composite(song, left= 1, top=3240)
-video.composite(artist, left= 1, top=3610)
-video.save(filename='video.png')
+    # Import cover
+    bg = Image.open(cover)
+    cv = Image.open(cover)
+    # Cover
+    cv = cv.resize((x, y), resample=0, box=None)
+    # Thumb Resize
+    bg = bg.resize((X, Y), resample=0, box=None)
+    # Blur and brightness
+    bg = ImageEnhance.Brightness(bg).enhance(0.3)
+    bg = bg.filter(ImageFilter.GaussianBlur(6))
+    bg = bg.copy()
+    # Paste cover into the background
+    center = (trunc((X-x)/2), trunc((Y-y)/2))
+    bg.paste(cv, ( trunc((X-x)/2 ), 659))
+
+    ### Text
+    text = ImageDraw.Draw(bg)
+    # Fonts
+    font_folder = 'fonts/'
+    roboto_bold = ImageFont.truetype(font_folder + 'Roboto-Bold.ttf', 279)
+    roboto_light = ImageFont.truetype(font_folder + 'Roboto-Light.ttf', 186)
+    # Get the size of the final texts
+    s_x, x_y = text.textsize(song, font=roboto_bold)
+    a_x, a_y = text.textsize(artist, font=roboto_light)
+    # Write text in the middle
+    text.text(((X-s_x)/2, 3240), song, fill=(255, 255, 255), font=roboto_bold, align='center')
+    text.text(((X-a_x)/2, 3640), artist, fill=(255, 255, 255), font=roboto_light, align='center')
+
+    # Export final file
+    bg.save('video.png', quality=95)
+
+    return print('Video image: Done')
