@@ -1,4 +1,4 @@
-**Arch Based**
+**pacman**
   ```
   sudo pacman -S python-pillow
   ```  
