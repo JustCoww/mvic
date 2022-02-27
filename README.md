@@ -17,5 +17,5 @@ https://fonts.google.com/specimen/Roboto
 
 **PIP**
 ```
-pip install pillow
+pip install mvic
 ```
